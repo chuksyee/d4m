@@ -4,6 +4,7 @@
 <!--  <property file="${basedir}/default_build.properties"/>  -->
 
 <!--  <import file="${basedir}/../d4m_api_java/build_common_targets.xml"/>  -->
+  <property name="graphulo.dir" value="${basedir}/../graphulo"/>
   <property name="build.dir" value="${basedir}/build"/>
   <property name="lib.dir" value="${basedir}/lib"/>
   <property name="src.dir" value="${basedir}/src"/>
@@ -11,7 +12,7 @@
   <property name="dist.dir" value="${build.dir}/dist"/>
   <property name="bin.dir" value="${build.dir}/dist/bin"/>
   <property name="test.reports" value="${basedir}/build/reports"/>
-  <property name="version.num"  value="3.2.0"/>
+  <property name="version.num"  value="3.0.0"/>
 
   <target name="clean">
      <delete dir="${build.dir}"/>
@@ -25,7 +26,7 @@
          <include name="matlab_src/**"/>
          <exclude name="matlab_src/html/**"/>
          <include name="TEST/**"/>
-         <include name="lib/**"/>
+         <include name="lib/graphulo-${version.num}*.jar"/>
          <include name="libext/**"/>
          <include name="examples/**"/>
          <include name="COPYING.txt"/>
@@ -45,12 +46,12 @@
        </fileset>
     </copy> 
     <copy todir="${dist.dir}">
-       <fileset dir="${basedir}/../d4m_api_java/target">
+       <fileset dir="${graphulo.dir}/target">
           <include name="graphulo-${version.num}-libext.zip"/>
        </fileset>
     </copy> 
     <copy todir="${dist.dir}/lib">
-       <fileset dir="${basedir}/../d4m_api_java/target">
+       <fileset dir="${graphulo.dir}/target">
           <include name="graphulo-${version.num}.jar"/>
           <include name="graphulo-${version.num}-alldeps.jar"/>
        </fileset>
@@ -63,7 +64,31 @@
     </copy> 
 -->
   </target>
-
+  <target name="copy-graphulo-artifacts" depends="">
+     <!--
+         graphulo-X.X.X.jar  > lib
+         graphulo-X.X.X-alldeps.jar  > lib
+         graphulo-X.X.X-libext.zip  > basedir
+         DBinit.m  > matlab_src
+     -->
+     <copy todir="${basedir}/lib">
+        <fileset dir="${graphulo.dir}/target">
+           <include name="graphulo-${version.num}.jar"/>
+           <include name="graphulo-${version.num}-alldeps.jar"/>
+        </fileset>
+     </copy>
+     <copy todir="${basedir}">
+        <fileset dir="${graphulo.dir}/target">
+           <include name="graphulo-${version.num}-libext.zip"/>
+        </fileset>
+     </copy>
+     <copy todir="${basedir}/matlab_src">
+        <fileset dir="${graphulo.dir}/target">
+           <include name="DBinit.m"/>
+        </fileset>
+     </copy>
+     
+  </target>
   <target name="init" depends="">
      <mkdir dir="${build.dir}/dist"/>
      <mkdir dir="${build.dir}/dist/docs"/>
@@ -111,7 +136,7 @@
   </target>
 
   <target name="all" 
-        depends="clean, init_local, unzip-libext, build_distribution" 
+        depends="clean,copy-graphulo-artifacts, init_local , unzip-libext, build_distribution" 
         description="Build a distribution of the whole software package"/> 
   
   <target name="my-echo" >
