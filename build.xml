@@ -8,6 +8,7 @@
   <property name="build.dir" value="${basedir}/build"/>
   <property name="lib.dir" value="${basedir}/lib"/>
   <property name="src.dir" value="${basedir}/src"/>
+  <property name="matlab_src.dir"  value="${basedir}/matlab_src"/>
   <property name="test_src.dir"  value="${basedir}/test"/>
   <property name="dist.dir" value="${build.dir}/dist"/>
   <property name="bin.dir" value="${build.dir}/dist/bin"/>
@@ -56,6 +57,12 @@
           <include name="graphulo-${version.num}-alldeps.jar"/>
        </fileset>
     </copy> 
+    <copy todir="${matlab_src.dir}">
+       <fileset dir="${graphulo.dir}/target">
+          <include name="DBinit.m"/>
+       </fileset>
+    </copy> 
+    
 <!--
     <copy todir="${dist.dir}/matlab_src">
        <fileset dir="${basedir}/../d4m_api_java/target">
@@ -82,12 +89,6 @@
            <include name="graphulo-${version.num}-libext.zip"/>
         </fileset>
      </copy>
-     <copy todir="${basedir}/matlab_src">
-        <fileset dir="${graphulo.dir}/target">
-           <include name="DBinit.m"/>
-        </fileset>
-     </copy>
-     
   </target>
   <target name="init" depends="">
      <mkdir dir="${build.dir}/dist"/>
